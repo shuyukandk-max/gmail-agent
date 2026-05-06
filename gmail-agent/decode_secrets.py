@@ -1,4 +1,3 @@
-import base64
 import os
 
 files = {
@@ -10,6 +9,5 @@ files = {
     "tokens/token5.json": os.environ["GMAIL_TOKEN_5"],
 }
 for path, data in files.items():
-    with open(path, "wb") as f:
-        clean = "".join(data.split())
-        f.write(base64.b64decode(clean))
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(data)
