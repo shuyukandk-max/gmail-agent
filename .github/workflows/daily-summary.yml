@@ -23,15 +23,30 @@ jobs:
           pip install -r requirements.txt
 
       - name: Restore credential files
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GMAIL_TOKEN_1: ${{ secrets.GMAIL_TOKEN_1 }}
+          GMAIL_TOKEN_2: ${{ secrets.GMAIL_TOKEN_2 }}
+          GMAIL_TOKEN_3: ${{ secrets.GMAIL_TOKEN_3 }}
+          GMAIL_TOKEN_4: ${{ secrets.GMAIL_TOKEN_4 }}
+          GMAIL_TOKEN_5: ${{ secrets.GMAIL_TOKEN_5 }}
         run: |
           cd gmail-agent
           mkdir -p tokens
-          echo "${{ secrets.GOOGLE_CREDENTIALS }}" | base64 -d -i > credentials.json
-          echo "${{ secrets.GMAIL_TOKEN_1 }}" | base64 -d -i > tokens/token1.json
-          echo "${{ secrets.GMAIL_TOKEN_2 }}" | base64 -d -i > tokens/token2.json
-          echo "${{ secrets.GMAIL_TOKEN_3 }}" | base64 -d -i > tokens/token3.json
-          echo "${{ secrets.GMAIL_TOKEN_4 }}" | base64 -d -i > tokens/token4.json
-          echo "${{ secrets.GMAIL_TOKEN_5 }}" | base64 -d -i > tokens/token5.json
+          python3 -c "
+import base64, os
+files = {
+    'credentials.json': os.environ['GOOGLE_CREDENTIALS'],
+    'tokens/token1.json': os.environ['GMAIL_TOKEN_1'],
+    'tokens/token2.json': os.environ['GMAIL_TOKEN_2'],
+    'tokens/token3.json': os.environ['GMAIL_TOKEN_3'],
+    'tokens/token4.json': os.environ['GMAIL_TOKEN_4'],
+    'tokens/token5.json': os.environ['GMAIL_TOKEN_5'],
+}
+for path, data in files.items():
+    with open(path, 'wb') as f:
+        f.write(base64.b64decode(data))
+"
 
       - name: Run Gmail agent
         env:
