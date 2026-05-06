@@ -11,4 +11,5 @@ files = {
 }
 for path, data in files.items():
     with open(path, "wb") as f:
-        f.write(base64.b64decode(data))
+        clean = "".join(data.split())
+        f.write(base64.b64decode(clean))
