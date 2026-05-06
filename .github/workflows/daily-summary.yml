@@ -26,12 +26,12 @@ jobs:
         run: |
           cd gmail-agent
           mkdir -p tokens
-          echo "${{ secrets.GOOGLE_CREDENTIALS }}" | base64 -d > credentials.json
-          echo "${{ secrets.GMAIL_TOKEN_1 }}" | base64 -d > tokens/token1.json
-          echo "${{ secrets.GMAIL_TOKEN_2 }}" | base64 -d > tokens/token2.json
-          echo "${{ secrets.GMAIL_TOKEN_3 }}" | base64 -d > tokens/token3.json
-          echo "${{ secrets.GMAIL_TOKEN_4 }}" | base64 -d > tokens/token4.json
-          echo "${{ secrets.GMAIL_TOKEN_5 }}" | base64 -d > tokens/token5.json
+          echo "${{ secrets.GOOGLE_CREDENTIALS }}" | base64 -d -i > credentials.json
+          echo "${{ secrets.GMAIL_TOKEN_1 }}" | base64 -d -i > tokens/token1.json
+          echo "${{ secrets.GMAIL_TOKEN_2 }}" | base64 -d -i > tokens/token2.json
+          echo "${{ secrets.GMAIL_TOKEN_3 }}" | base64 -d -i > tokens/token3.json
+          echo "${{ secrets.GMAIL_TOKEN_4 }}" | base64 -d -i > tokens/token4.json
+          echo "${{ secrets.GMAIL_TOKEN_5 }}" | base64 -d -i > tokens/token5.json
 
       - name: Run Gmail agent
         env:
