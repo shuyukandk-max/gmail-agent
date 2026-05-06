@@ -1,0 +1,25 @@
+# Gmail 自動化代理人設定檔
+
+gmail_accounts:
+  - email: admin@lumiora.studio
+    token_file: tokens/token1.json
+  - email: shuyukan.dk@gmail.com
+    token_file: tokens/token2.json
+  - email: 60722105@gm.chihlee.edu.tw
+    token_file: tokens/token3.json
+  - email: shuyu0908178239@gmail.com
+    token_file: tokens/token4.json
+  - email: blighteye.demi@gmail.com
+    token_file: tokens/token5.json
+
+line:
+  channel_access_token: "S9rfCvhqFiywP4V/abdWaighOoYkaAuMo7hTrB463sL5FazltgHmUooJgwbVZgFtdbnf9regXGvelZJjCwrAGgtqXNSGDIeItesEx72xTemH9/FsA656mEc6E4iAAUYpaqCrv1C+dV/7GSfVMvDB9wdB04t89/1O/w1cDnyilFU="
+  user_id: "Uafdf43c59e9d2d6ea1dd948f25143517"
+
+claude:
+  model: gpt-4o-mini
+  api_key_env: OPENAI_API_KEY  # 從環境變數讀取，不要在這裡填金鑰
+
+schedule:
+  time: "09:00"
+  timezone: "Asia/Taipei"

@@ -1,0 +1,22 @@
+# 自動回覆規則：依序比對，第一個符合的規則生效
+# 不符合任何規則的郵件：不自動回覆，只出現在 LINE 摘要中
+
+rules:
+  - name: 客戶詢問信
+    match:
+      subject_keywords: ["詢問", "報價", "合作", "諮詢"]
+    action: reply
+    template: |
+      感謝您的來信！
+      我們已收到您的詢問，將於 1-2 個工作天內回覆。
+      如有急事請直接來電，謝謝。
+
+  - name: 訂單通知
+    match:
+      from_domain: ["shopee.com", "momo.com", "pchome.com.tw"]
+    action: archive
+
+  - name: 電子報
+    match:
+      subject_keywords: ["unsubscribe", "取消訂閱", "電子報"]
+    action: ignore
