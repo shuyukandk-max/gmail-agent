@@ -1,0 +1,6 @@
+gmail-agent/credentials.json
+gmail-agent/tokens/
+gmail-agent/.env
+__pycache__/
+*.pyc
+.DS_Store

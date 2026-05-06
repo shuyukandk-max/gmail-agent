@@ -1,0 +1,43 @@
+name: Daily Gmail Summary
+
+on:
+  schedule:
+    - cron: '0 1 * * *'  # 09:00 Asia/Taipei (UTC+8)
+  workflow_dispatch:
+
+jobs:
+  run-summary:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          cd gmail-agent
+          pip install -r requirements.txt
+
+      - name: Restore credential files
+        run: |
+          cd gmail-agent
+          mkdir -p tokens
+          echo "${{ secrets.GOOGLE_CREDENTIALS }}" | base64 -d > credentials.json
+          echo "${{ secrets.GMAIL_TOKEN_1 }}" | base64 -d > tokens/token1.json
+          echo "${{ secrets.GMAIL_TOKEN_2 }}" | base64 -d > tokens/token2.json
+          echo "${{ secrets.GMAIL_TOKEN_3 }}" | base64 -d > tokens/token3.json
+          echo "${{ secrets.GMAIL_TOKEN_4 }}" | base64 -d > tokens/token4.json
+          echo "${{ secrets.GMAIL_TOKEN_5 }}" | base64 -d > tokens/token5.json
+
+      - name: Run Gmail agent
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
+        run: |
+          cd gmail-agent
+          python main.py
