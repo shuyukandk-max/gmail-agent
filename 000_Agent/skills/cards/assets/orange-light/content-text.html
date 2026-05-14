@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<title>Content Text — 晶白系</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500&family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  .card {
+    width: 1080px;
+    height: 1350px;
+    background: #FDFAF6;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Noto Serif TC', serif;
+    padding: 100px 90px;
+    display: flex;
+    flex-direction: column;
+  }
+  /* 極細金色格紋 */
+  .card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(162,148,100,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(162,148,100,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+  .accent-bar {
+    width: 48px;
+    height: 2px;
+    background: #A29464;
+    margin-bottom: 36px;
+  }
+  .title {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 700;
+    font-size: 68px;
+    color: #A29464;
+    line-height: 1.4;
+    margin-bottom: 52px;
+    position: relative;
+    z-index: 1;
+  }
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+  .bullet-item {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+  }
+  .bullet-dot {
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    background: #CFC5B2;
+    border-radius: 50%;
+    margin-top: 22px;
+  }
+  .bullet-text {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 42px;
+    font-weight: 400;
+    color: #2C2620;
+    line-height: 1.75;
+  }
+  .handle {
+    position: absolute;
+    bottom: 60px;
+    left: 90px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: rgba(44,38,32,0.22);
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="accent-bar"></div>
+  <h2 class="title">標題標題<br>標題標題標題標題？</h2>
+  <div class="bullet-list">
+    <div class="bullet-item">
+      <div class="bullet-dot"></div>
+      <p class="bullet-text">內文內文內文內文內文內文內文內文內文內文內文</p>
+    </div>
+    <div class="bullet-item">
+      <div class="bullet-dot"></div>
+      <p class="bullet-text">內文內文內文內文內文內文內文內文內文內文內文內文內文</p>
+    </div>
+    <div class="bullet-item">
+      <div class="bullet-dot"></div>
+      <p class="bullet-text">內文內文內文內文內文內文內文內文內文內文內文</p>
+    </div>
+    <div class="bullet-item">
+      <div class="bullet-dot"></div>
+      <p class="bullet-text">內文內文內文內文內文內文內文內文內文內文內文內文內文</p>
+    </div>
+  </div>
+  <span class="handle">璀晶之燦</span>
+</div>
+</body>
+</html>
