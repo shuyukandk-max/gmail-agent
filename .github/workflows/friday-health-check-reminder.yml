@@ -2,7 +2,7 @@ name: Friday AI Brain Health Check Reminder
 
 on:
   schedule:
-    - cron: '0 9 * * 5'  # 每週五 17:00 Asia/Taipei (UTC+8)
+    - cron: '0 1 * * 5'  # 每週五 09:00 Asia/Taipei (UTC+8)
   workflow_dispatch:
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
               \"messages\": [
                 {
                   \"type\": \"text\",
-                  \"text\": \"🩺 週五 AI 分身體檢提醒\n\n複盤前記得跑一下體檢腳本，確認 AI 大腦運作正常：\n\nbash ~/Library/CloudStorage/GoogleDrive-admin@lumiora.studio/我的雲端硬碟/demi-agent/000_Agent/scripts/sync-health.sh\n\n🎉 看到「全部正常」就可以放心複盤了！\"
+                  \"text\": \"🩺 週五早安！AI 分身體檢提醒\n\n開始今天工作前跑一下體檢腳本，確認 AI 大腦運作正常：\n\nbash ~/Library/CloudStorage/GoogleDrive-admin@lumiora.studio/我的雲端硬碟/demi-agent/000_Agent/scripts/sync-health.sh\n\n🎉 看到「全部正常」就可以放心複盤了！\"
                 }
               ]
             }"
