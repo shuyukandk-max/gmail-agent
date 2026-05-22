@@ -2,7 +2,7 @@ name: Daily Gmail Summary
 
 on:
   schedule:
-    - cron: '0 22 * * *'  # 06:00 Asia/Taipei (UTC+8)
+    - cron: '0 1 * * *'  # 09:00 Asia/Taipei (UTC+8)
   workflow_dispatch:
 
 jobs:
