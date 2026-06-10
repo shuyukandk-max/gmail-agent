@@ -36,7 +36,8 @@ body { font-family: 'Georgia', '思源宋體', serif; background: var(--bg); col
 .lc-o-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
 .lc-o-circle { width: 64px; height: 64px; border-radius: 50%; background: var(--gold); color: #fff; font-size: 2rem; font-weight: bold; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 16px rgba(201,168,106,.4); }
 .lc-o-meta h2 { font-size: 1.2rem; color: var(--gold-dark); }
-.lc-o-meta .lc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.lc-o-meta .lc-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; }
+.lc-tags-label { font-size: .8rem; color: var(--brown); }
 .lc-tag { padding: 2px 10px; border-radius: 20px; font-size: .78rem; background: var(--gold-light); color: var(--dark); }
 .lc-tag.wuxing { background: #f0e8d8; border: 1px solid var(--gold); }
 .lc-tag.type { background: #e8f0f8; color: #2a4a6a; }
@@ -60,8 +61,9 @@ body { font-family: 'Georgia', '思源宋體', serif; background: var(--bg); col
 .lc-paid-overlay p { font-size: .82rem; color: var(--brown); margin-bottom: 14px; text-align: center; }
 .lc-cta-btn { padding: 10px 28px; background: var(--gold-dark); color: #fff; border: none; border-radius: 8px; font-size: .9rem; cursor: pointer; font-family: inherit; text-decoration: none; display: inline-block; }
 .lc-cta-btn:hover { background: #8a6030; }
-.lc-paid-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-.lc-paid-chip { padding: 4px 12px; background: #e8e0d8; border-radius: 20px; font-size: .82rem; color: var(--brown); }
+.lc-deep-block { margin-bottom: 14px; }
+.lc-deep-block h4 { font-size: .85rem; color: var(--gold-dark); margin-bottom: 4px; }
+.lc-deep-block p { font-size: .85rem; line-height: 1.7; color: var(--dark); }
 @media (max-width: 480px) {
   #lc-birthdate { margin-right: 0; margin-bottom: 10px; }
   .lc-o-energy { grid-template-columns: 1fr; }
@@ -192,18 +194,38 @@ const LIFE_CODE_CONFIG = {
     '遠見型':'眼光長遠，思維宏觀，充滿可能',
   },
   groups:[
-    {code:'IJM', area:'最根本密碼', desc:'起心動念、動機根源'},
-    {code:'KLN', area:'最根本密碼', desc:'能量基礎、先天資質'},
-    {code:'MNO', area:'核心性格',   desc:'最深沈的自我'},
-    {code:'JMW', area:'工作人際',   desc:'延伸工作人際情形'},
-    {code:'IMX', area:'工作人際',   desc:'延伸工作人際情形'},
-    {code:'XWS', area:'工作人際',   desc:'21-40歲工作與人際'},
-    {code:'NOQ', area:'性格外顯',   desc:'對內性格密碼'},
-    {code:'MOP', area:'性格外顯',   desc:'對外性格密碼'},
-    {code:'QPR', area:'事業發展',   desc:'41-60歲事業與發展'},
-    {code:'KNV', area:'家庭財富',   desc:'延伸家庭財富情形'},
-    {code:'LNU', area:'家庭財富',   desc:'延伸家庭財富情形'},
-    {code:'VUT', area:'家庭財富',   desc:'60歲後家庭與財富'},
+    {code:'IJM', letters:['I','J','M'], area:'最根本密碼', desc:'起心動念、動機根源',
+      template:'你做事的起心動念，融合了 %1%、%2%、%3% 三股動力——這是你內在最原始的驅動來源，也是你面對任何選擇時，最先浮現的念頭。'},
+    {code:'KLN', letters:['K','L','N'], area:'最根本密碼', desc:'能量基礎、先天資質',
+      template:'你與生俱來的能量基礎，由 %1%、%2%、%3% 構成——這是你不需努力就擁有的天賦資質，也是你面對挑戰時最底層的支撐力量。'},
+    {code:'MNO', letters:['M','N','O'], area:'核心性格',   desc:'最深沈的自我',
+      template:'你最深層的自我，是 %1%、%2%、%3% 交織而成——這是你拿掉所有偽裝後最真實的樣子，主導你近 60% 的思想與行為模式。'},
+    {code:'JMW', letters:['J','M','W'], area:'工作人際',   desc:'延伸工作人際情形',
+      template:'在工作與人際的延伸面向上，%1%、%2%、%3% 會交錯出現——當你與人合作或處理職場關係時，這些特質會輪流浮現，影響你的應對方式。'},
+    {code:'IMX', letters:['I','M','X'], area:'工作人際',   desc:'延伸工作人際情形',
+      template:'另一個工作人際的切面，由 %1%、%2%、%3% 組成——這會影響你在團隊中扮演的角色，以及你跟同事、夥伴互動的習慣模式。'},
+    {code:'XWS', letters:['X','W','S'], area:'工作人際',   desc:'21-40歲工作與人際',
+      template:'21-40歲這段期間，你的工作與人際關係主軸會圍繞著 %1%、%2%、%3% 展開——這是你建立專業形象、累積人脈資源的黃金階段。'},
+    {code:'NOQ', letters:['N','O','Q'], area:'性格外顯',   desc:'對內性格密碼',
+      template:'對內，也就是你自己最清楚的內心戲，是 %1%、%2%、%3% 的拉扯與融合——這是只有你自己才知道的真實心理狀態，可能跟外在表現有落差。'},
+    {code:'MOP', letters:['M','O','P'], area:'性格外顯',   desc:'對外性格密碼',
+      template:'對外，也就是別人眼中看到的你，呈現出 %1%、%2%、%3% 的樣貌——這是你給人的第一印象，以及大家對你長期的觀感與評價。'},
+    {code:'QPR', letters:['Q','P','R'], area:'事業發展',   desc:'41-60歲事業與發展',
+      template:'41-60歲是你的事業發展高峰期，%1%、%2%、%3% 會成為這段時期的關鍵主題——這是你最有機會把過去累積的能量轉化為具體成果的階段。'},
+    {code:'KNV', letters:['K','N','V'], area:'家庭財富',   desc:'延伸家庭財富情形',
+      template:'家庭與財富的其中一個面向，由 %1%、%2%、%3% 構成——這會影響你如何看待安全感、累積資源的方式與態度。'},
+    {code:'LNU', letters:['L','N','U'], area:'家庭財富',   desc:'延伸家庭財富情形',
+      template:'另一個家庭財富的切面，是 %1%、%2%、%3% 的組合——反映你在親密關係經營與物質生活上的偏好與習慣。'},
+    {code:'VUT', letters:['V','U','T'], area:'家庭財富',   desc:'60歲後家庭與財富',
+      template:'60歲後，你的家庭與財富狀態會由 %1%、%2%、%3% 主導——這是你人生下半場安身立命的基礎，也是辛苦半生後最終的收成樣貌。'},
+  ],
+  specialCodes:[
+    {key:'subconscious', name:'潛意識密碼',
+      template:'潛意識密碼 %N% 號——帶有%KW%的特質。這是你不自覺、自動導航般展現出來的行為模式，連你自己都不一定會察覺，卻深深影響著你的選擇。'},
+    {key:'inner', name:'內心密碼',
+      template:'內心密碼 %N% 號——帶有%KW%的特質。這是藏在表面性格之下，你內在最真實的性格底色。'},
+    {key:'outer', name:'外心密碼',
+      template:'外心密碼 %N% 號——帶有%KW%的特質。這是你對外展現的價值觀與人生動向，旁人通常比你自己更容易感受到。'},
   ],
 };
 
@@ -253,7 +275,7 @@ function lcCalculate() {
   lcRenderHologram(vals);
   lcRenderOCard(vals.O, vals);
   lcRenderCrystals(vals.O, vals.subconscious);
-  lcRenderPaidPreview(vals);
+  lcRenderDeepAnalysis(vals);
   const result = document.getElementById('lc-result');
   result.style.display = 'block';
   result.scrollIntoView({behavior:'smooth'});
@@ -347,16 +369,8 @@ function lcRenderHologram(vals) {
     c.setAttribute('stroke-width', k==='O' ? 3 : 1.5);
     svg.appendChild(c);
 
-    const lt = document.createElementNS(ns,'text');
-    lt.setAttribute('x',x); lt.setAttribute('y', y - st.r*0.3);
-    lt.setAttribute('text-anchor','middle'); lt.setAttribute('font-size',st.ts);
-    lt.setAttribute('fill', k==='O' ? 'rgba(255,255,255,0.75)' : '#8B7355');
-    lt.setAttribute('font-family','Arial,sans-serif');
-    lt.textContent = k;
-    svg.appendChild(lt);
-
     const vt = document.createElementNS(ns,'text');
-    vt.setAttribute('x',x); vt.setAttribute('y', y + st.r*0.55);
+    vt.setAttribute('x',x); vt.setAttribute('y', y + st.vs*0.35);
     vt.setAttribute('text-anchor','middle'); vt.setAttribute('font-size',st.vs);
     vt.setAttribute('font-weight','bold'); vt.setAttribute('font-family','Arial,sans-serif');
     vt.setAttribute('fill', k==='O' ? '#fff' : '#3D2B1F');
@@ -376,8 +390,9 @@ function lcRenderOCard(O, vals) {
     <div class="lc-o-header">
       <div class="lc-o-circle">${O}</div>
       <div class="lc-o-meta">
-        <h2>${O} 號・${p.name}</h2>
+        <h2>生命密碼（主性格碼）：${O} 號・${p.name}</h2>
         <div class="lc-tags">
+          <span class="lc-tags-label">五行屬性：</span>
           <span class="lc-tag wuxing">${wuxingLabel}</span>
           <span class="lc-tag type">${p.type}</span>
           ${p.keywords.map(kw=>`<span class="lc-tag">${kw}</span>`).join('')}
@@ -406,17 +421,17 @@ function lcRenderCrystals(O, sub) {
     <h3>✦ 水晶能量推薦</h3>
     <div class="lc-crystal-grid">
       <div class="lc-crystal-card">
-        <h4>主性格水晶（O = ${O} 號）</h4>
+        <h4>主性格碼${O}（${pO.color.name}）</h4>
         <span class="lc-color-badge" style="background:${pO.color.hex};color:#fff">
-          ${pO.color.name}・${pO.color.energy}
+          ${pO.color.energy}
         </span>
         <div class="lc-crystal-list">${pO.crystals.slice(0,3).join('・')}</div>
         <div class="lc-crystal-desc">${pO.crystalUse}</div>
       </div>
       <div class="lc-crystal-card">
-        <h4>潛意識水晶（密碼 = ${sub} 號）</h4>
+        <h4>潛意識碼${sub}（${pSub.color.name}）</h4>
         <span class="lc-color-badge" style="background:${pSub.color.hex};color:#fff">
-          ${pSub.color.name}・${pSub.color.energy}
+          ${pSub.color.energy}
         </span>
         <div class="lc-crystal-list">${pSub.crystals.slice(0,2).join('・')}</div>
         <div class="lc-crystal-desc">${pSub.crystalUse}</div>
@@ -426,25 +441,81 @@ function lcRenderCrystals(O, sub) {
 }
 
 // ============================================================
-// 付費深度解析預覽
+// 深度解析（付費層）
 // ============================================================
-function lcRenderPaidPreview(vals) {
-  const chips = LIFE_CODE_CONFIG.groups.map(g => {
-    const nums = g.code.split('').map(c => vals[c] !== undefined ? vals[c] : '?').join('-');
-    return `<span class="lc-paid-chip">${g.code} ${nums}・${g.desc}</span>`;
+function lcNumLabel(n) {
+  const p = LIFE_CODE_CONFIG.personalities[n];
+  return `${n}號（${p.keywords.join('・')}）`;
+}
+
+function lcLifeDirection(vals) {
+  const p = n => LIFE_CODE_CONFIG.personalities[n];
+  const {O, subconscious: sub, outer} = vals;
+  const paragraphs = [];
+
+  paragraphs.push(`你的核心天賦是：${p(O).positive}`);
+
+  if (sub === O && outer === O) {
+    paragraphs.push(`你的潛意識、內在與外在表現高度一致，代表你「表裡如一」，行事風格穩定可預期。`);
+  } else if (sub === O) {
+    paragraphs.push(`你的潛意識與主性格相同（都是${O}號），代表你的自動反應跟主性格一致；但外心密碼是${outer}號，對外展現的價值觀帶有${p(outer).keywords.join('・')}的色彩，跟核心性格略有不同。`);
+  } else {
+    paragraphs.push(`你的潛意識密碼（${sub}號）跟主性格（${O}號）不同——表面上你展現的是${p(O).keywords.join('・')}，但潛意識卻常被${p(sub).keywords.join('・')}驅動，這種落差有時連你自己都會感到意外。`);
+  }
+
+  const xws = [vals.X, vals.W, vals.S];
+  const vut = [vals.V, vals.U, vals.T];
+  const sameStage = [...xws].sort().join() === [...vut].sort().join();
+  if (sameStage) {
+    paragraphs.push(`你的21-40歲與60歲後的人生主題完全呼應（都是${vals.X}-${vals.W}-${vals.S}的組合），代表年輕時建立的根基會延續到晚年，形成首尾呼應的人生格局——年輕時投入的領域，老了依然會是你安身立命之處。`);
+  } else {
+    paragraphs.push(`你的21-40歲主軸是${vals.X}-${vals.W}-${vals.S}，60歲後則轉變為${vals.V}-${vals.U}-${vals.T}——人生上下半場的重心會有所轉移，提醒自己在不同階段調整重心。`);
+  }
+
+  paragraphs.push(`41-60歲是你的事業關鍵期，主題組合是${vals.Q}-${vals.P}-${vals.R}——建議把握這段時間，將${p(vals.Q).keywords.join('・')}、${p(vals.P).keywords.join('・')}、${p(vals.R).keywords.join('・')}的特質具體落地，是最容易看到成果的黃金時期。`);
+
+  const counts = {};
+  LIFE_CODE_CONFIG.groups.forEach(g => {
+    const key = g.letters.map(l => vals[l]).sort().join('-');
+    counts[key] = (counts[key] || 0) + 1;
+  });
+  const repeated = Object.entries(counts).filter(([,c]) => c >= 2).sort((a,b) => b[1]-a[1])[0];
+  if (repeated) {
+    const [combo, count] = repeated;
+    paragraphs.push(`${combo} 這個能量組合在你的密碼中重複出現了 ${count} 次，代表這是貫穿你一生的核心主軸，值得特別關注與發展。`);
+  }
+
+  return paragraphs.map(t => `<p>${t}</p>`).join('');
+}
+
+function lcRenderDeepAnalysis(vals) {
+  const groupsHtml = LIFE_CODE_CONFIG.groups.map(g => {
+    const nums = g.letters.map(l => vals[l]);
+    const [a, b, c] = nums.map(lcNumLabel);
+    const text = g.template.replace('%1%', a).replace('%2%', b).replace('%3%', c);
+    return `<div class="lc-deep-block"><h4>${g.desc} ${nums.join('-')}</h4><p>${text}</p></div>`;
   }).join('');
+
+  const specialHtml = LIFE_CODE_CONFIG.specialCodes.map(s => {
+    const n = vals[s.key];
+    const kw = LIFE_CODE_CONFIG.personalities[n].keywords.join('・');
+    const text = s.template.replace('%N%', n).replace('%KW%', kw);
+    return `<div class="lc-deep-block"><h4>${s.name}</h4><p>${text}</p></div>`;
+  }).join('');
+
   document.getElementById('lc-paid-section').innerHTML = `
     <div class="lc-paid-blur">
-      <h3 style="text-align:center;color:var(--gold-dark);margin-bottom:14px">深度解析・12 組聯合密碼</h3>
-      <div class="lc-paid-row">${chips}</div>
-      <div style="margin-top:14px;padding:12px;background:#fff;border-radius:8px">
-        <strong>三大特殊密碼</strong><br>
-        潛意識密碼 ${vals.subconscious}・內心密碼 ${vals.inner}・外心密碼 ${vals.outer}
+      <h3 style="text-align:center;color:var(--gold-dark);margin-bottom:14px">深度解析・你的完整生命密碼</h3>
+      ${groupsHtml}
+      ${specialHtml}
+      <div class="lc-deep-block">
+        <h4>人生方向建議</h4>
+        ${lcLifeDirection(vals)}
       </div>
     </div>
     <div class="lc-paid-overlay">
       <h3>解鎖你的完整生命密碼</h3>
-      <p>12 組聯合密碼・三大特殊密碼・水晶個人化建議</p>
+      <p>12 組聯合密碼・三大特殊密碼・人生方向建議・水晶個人化建議</p>
       <a class="lc-cta-btn" href="/contact">預約深度解析 →</a>
     </div>
   `;
