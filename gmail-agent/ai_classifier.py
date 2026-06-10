@@ -2,6 +2,29 @@ import json
 import os
 from openai import OpenAI
 
+# 各帳號的重要郵件定義
+ACCOUNT_RULES = {
+    "admin@lumiora.studio": (
+        "Google Workspace 相關通知（日曆邀請、Drive 分享、Google 帳號安全通知、Workspace 管理員通知）"
+    ),
+    "shuyukan.dk@gmail.com": (
+        "信用卡或銀行的刷卡通知、帳單、繳費通知；"
+        "客戶或工作往來的信件（需要回覆或處理的）；"
+        "課程或學習平台通知（Teachable、Notion、線上課程等）"
+    ),
+    "60722105@gm.chihlee.edu.tw": (
+        "Notion 相關通知；學校重要通知"
+    ),
+    "shuyu0908178239@gmail.com": (
+        "個人重要事務（保險繳費、保單通知、理賠；政府機關；醫療）；"
+        "信用卡或銀行的刷卡通知、帳單、繳費通知；"
+        "社群訂閱服務通知（Instagram、重要訂閱服務等）"
+    ),
+    "blighteye.demi@gmail.com": (
+        "所有信用卡刷卡通知、銀行帳戶通知、帳單、繳費通知（不論寄件人）"
+    ),
+}
+
 CLASSIFY_PROMPT = """你是一個郵件分類助手。分析以下郵件，回傳 JSON 格式結果。
 
 郵件資訊：
@@ -10,6 +33,13 @@ CLASSIFY_PROMPT = """你是一個郵件分類助手。分析以下郵件，回�
 - 主旨：{subject}
 - 內容：{body}
 - 日期：{date}
+
+【此帳號的重要郵件定義】
+{account_rules}
+
+【通用規則（優先度低於帳號規則）】
+- 電子發票、收據、訂閱收據（e-invoice、receipt）只是消費憑證，不需要行動，除非帳號規則特別指定，否則一律歸為「一般」
+- 電子報、促銷信、行銷通知 → 一般
 
 請回傳以下格式的 JSON（只回傳純 JSON，不要 markdown 或其他文字）：
 {{
@@ -20,9 +50,9 @@ CLASSIFY_PROMPT = """你是一個郵件分類助手。分析以下郵件，回�
 }}
 
 分類標準：
-- 重要：需要你本人處理或回覆的信；銀行或信用卡的刷卡通知、帳單、繳費通知；保險公司的保單通知、繳費提醒、理賠相關通知
+- 重要：符合此帳號重要郵件定義的信
 - 待處理：需要稍後閱讀，但不緊急
-- 一般：電子報、促銷信、一般行銷通知等可忽略的信"""
+- 一般：電子報、促銷信、行銷通知、電子發票收據等可忽略的信"""
 
 
 def _extract_json(raw: str) -> str:
@@ -40,12 +70,16 @@ def classify_email(email: dict, model: str = "gpt-4o-mini") -> dict:
 
     client = OpenAI(api_key=api_key)
 
+    account = email.get("account", "")
+    account_rules = ACCOUNT_RULES.get(account, "依一般規則分類")
+
     prompt = CLASSIFY_PROMPT.format(
-        account=email.get("account", ""),
+        account=account,
         sender=email.get("sender", ""),
         subject=email.get("subject", ""),
         body=email.get("body", "")[:1000],
-        date=email.get("date", "")
+        date=email.get("date", ""),
+        account_rules=account_rules,
     )
 
     response = client.chat.completions.create(
