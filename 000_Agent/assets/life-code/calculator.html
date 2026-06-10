@@ -77,7 +77,7 @@ body { font-family: 'Georgia', '思源宋體', serif; background: var(--bg); col
   </div>
   <div class="lc-input-section">
     <label for="lc-birthdate">請輸入西元出生日期</label>
-    <input type="date" id="lc-birthdate" max="2025-12-31">
+    <input type="date" id="lc-birthdate" min="1900-01-01" max="2025-12-31">
     <button id="lc-calc-btn" onclick="lcCalculate()">計算全息圖</button>
   </div>
   <div class="lc-result" id="lc-result">
@@ -400,8 +400,8 @@ function lcRenderOCard(O, vals) {
 // 水晶推薦
 // ============================================================
 function lcRenderCrystals(O, sub) {
-  const pO  = LIFE_CODE_CONFIG.personalities[O];
-  const pSub = LIFE_CODE_CONFIG.personalities[sub];
+  const pO   = LIFE_CODE_CONFIG.personalities[O]   || LIFE_CODE_CONFIG.personalities[1];
+  const pSub = LIFE_CODE_CONFIG.personalities[sub] || LIFE_CODE_CONFIG.personalities[1];
   document.getElementById('lc-crystal-section').innerHTML = `
     <h3>✦ 水晶能量推薦</h3>
     <div class="lc-crystal-grid">
