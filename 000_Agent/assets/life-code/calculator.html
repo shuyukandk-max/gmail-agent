@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生命密碼全息圖</title>
+<style>
+:root {
+  --cream:      #F4EDD5;
+  --gold:       #C9A86A;
+  --gold-light: #EDD79A;
+  --gold-dark:  #A07840;
+  --dark:       #3D2B1F;
+  --brown:      #7A5C3A;
+  --bg:         #FAF5E8;
+  --border:     #DDD0B0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Georgia', '思源宋體', serif; background: var(--bg); color: var(--dark); }
+.lc-wrap { max-width: 720px; margin: 0 auto; padding: 32px 20px; }
+.lc-title { text-align: center; margin-bottom: 28px; }
+.lc-title h1 { font-size: 1.6rem; color: var(--gold-dark); letter-spacing: .1em; }
+.lc-title p { font-size: .9rem; color: var(--brown); margin-top: 6px; }
+.lc-input-section { background: var(--cream); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; margin-bottom: 28px; }
+.lc-input-section label { display: block; font-size: .95rem; color: var(--brown); margin-bottom: 12px; }
+#lc-birthdate { padding: 10px 16px; font-size: 1rem; border: 2px solid var(--gold); border-radius: 8px; background: #fff; color: var(--dark); margin-right: 10px; outline: none; }
+#lc-calc-btn { padding: 10px 24px; background: var(--gold); color: #fff; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-family: inherit; transition: background .2s; }
+#lc-calc-btn:hover { background: var(--gold-dark); }
+.lc-result { display: none; }
+.lc-hologram-wrap { background: var(--cream); border: 1px solid var(--border); border-radius: 12px; padding: 20px 10px; margin-bottom: 24px; overflow-x: auto; }
+.lc-hologram-title { text-align: center; font-size: .85rem; color: var(--brown); margin-bottom: 12px; }
+#lc-svg { display: block; margin: 0 auto; max-width: 100%; }
+.lc-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: center; margin-top: 14px; font-size: .78rem; color: var(--brown); }
+.lc-legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 4px; vertical-align: middle; }
+.lc-o-card { background: linear-gradient(135deg, #fff9ee, var(--cream)); border: 2px solid var(--gold); border-radius: 14px; padding: 24px; margin-bottom: 24px; }
+.lc-o-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.lc-o-circle { width: 64px; height: 64px; border-radius: 50%; background: var(--gold); color: #fff; font-size: 2rem; font-weight: bold; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 16px rgba(201,168,106,.4); }
+.lc-o-meta h2 { font-size: 1.2rem; color: var(--gold-dark); }
+.lc-o-meta .lc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.lc-tag { padding: 2px 10px; border-radius: 20px; font-size: .78rem; background: var(--gold-light); color: var(--dark); }
+.lc-tag.wuxing { background: #f0e8d8; border: 1px solid var(--gold); }
+.lc-tag.type { background: #e8f0f8; color: #2a4a6a; }
+.lc-o-desc { font-size: .9rem; line-height: 1.7; color: var(--dark); margin-bottom: 10px; }
+.lc-o-energy { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: .85rem; }
+.lc-o-energy div { background: #fff; border-radius: 8px; padding: 10px 12px; border: 1px solid var(--border); }
+.lc-o-energy strong { display: block; color: var(--gold-dark); margin-bottom: 4px; font-size: .8rem; }
+.lc-sub-info { font-size: .8rem; color: var(--brown); margin-top: 10px; text-align: right; }
+.lc-crystal-section { background: var(--cream); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }
+.lc-crystal-section h3 { font-size: 1rem; color: var(--gold-dark); margin-bottom: 16px; text-align: center; }
+.lc-crystal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.lc-crystal-card { background: #fff; border-radius: 10px; padding: 14px; border: 1px solid var(--border); }
+.lc-crystal-card h4 { font-size: .85rem; color: var(--brown); margin-bottom: 6px; }
+.lc-crystal-list { font-size: .9rem; color: var(--dark); font-weight: bold; margin-bottom: 6px; }
+.lc-crystal-desc { font-size: .78rem; color: var(--brown); line-height: 1.5; }
+.lc-color-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: .75rem; margin-bottom: 6px; }
+.lc-paid-section { position: relative; border-radius: 12px; overflow: hidden; margin-bottom: 24px; border: 1px solid var(--border); }
+.lc-paid-blur { filter: blur(4px); user-select: none; pointer-events: none; background: var(--cream); padding: 20px 24px; }
+.lc-paid-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 0%, rgba(250,245,232,.9) 35%); display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 28px; }
+.lc-paid-overlay h3 { font-size: 1rem; color: var(--gold-dark); margin-bottom: 8px; text-align: center; }
+.lc-paid-overlay p { font-size: .82rem; color: var(--brown); margin-bottom: 14px; text-align: center; }
+.lc-cta-btn { padding: 10px 28px; background: var(--gold-dark); color: #fff; border: none; border-radius: 8px; font-size: .9rem; cursor: pointer; font-family: inherit; text-decoration: none; display: inline-block; }
+.lc-cta-btn:hover { background: #8a6030; }
+.lc-paid-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.lc-paid-chip { padding: 4px 12px; background: #e8e0d8; border-radius: 20px; font-size: .82rem; color: var(--brown); }
+@media (max-width: 480px) {
+  #lc-birthdate { margin-right: 0; margin-bottom: 10px; }
+  .lc-o-energy { grid-template-columns: 1fr; }
+  .lc-crystal-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="lc-wrap">
+  <div class="lc-title">
+    <h1>✦ 生命密碼全息圖 ✦</h1>
+    <p>輸入你的西元生日，解碼你的人生藍圖</p>
+  </div>
+  <div class="lc-input-section">
+    <label for="lc-birthdate">請輸入西元出生日期</label>
+    <input type="date" id="lc-birthdate" max="2025-12-31">
+    <button id="lc-calc-btn" onclick="lcCalculate()">計算全息圖</button>
+  </div>
+  <div class="lc-result" id="lc-result">
+    <div class="lc-hologram-wrap">
+      <div class="lc-hologram-title">你的生命密碼全息圖</div>
+      <svg id="lc-svg" viewBox="0 0 700 510" width="680" height="510"></svg>
+      <div class="lc-legend">
+        <span><span class="lc-legend-dot" style="background:#C9A86A"></span>核心七魄</span>
+        <span><span class="lc-legend-dot" style="background:#7BAFD4"></span>工作人際（21-40歲）</span>
+        <span><span class="lc-legend-dot" style="background:#6DB38A"></span>家庭財富（60歲後）</span>
+        <span><span class="lc-legend-dot" style="background:#9B7DCA"></span>事業發展（41-60歲）</span>
+      </div>
+    </div>
+    <div class="lc-o-card" id="lc-o-card"></div>
+    <div class="lc-crystal-section" id="lc-crystal-section"></div>
+    <div class="lc-paid-section" id="lc-paid-section"></div>
+  </div>
+</div>
+<script>
+// ============================================================
+// LIFE_CODE_CONFIG — 同步自 000_Agent/knowledge/life-code-config.md
+// ============================================================
+const LIFE_CODE_CONFIG = {
+  personalities: {
+    1: {
+      name:'開創數・創始數', type:'務實型', wuxing:'金',
+      keywords:['創意','領導','自卑'],
+      color:{name:'紅色', hex:'#C0392B', energy:'權力、活力、衝勁'},
+      crystals:['紅瑪瑙','紅石榴','紅碧璽','紅髮晶','紅珊瑚'],
+      crystalUse:'增加活力、並找回熱情及勇氣',
+      positive:'天生領導者，創新能力強，使命必達，重視結果',
+      negative:'過於自我，自以為是，強勢，希望別人依照自己的方式',
+    },
+    2: {
+      name:'協調數・平衡數', type:'感覺型', wuxing:'水',
+      keywords:['溝通','貼心','猶豫'],
+      color:{name:'橙色', hex:'#D35400', energy:'和諧、融洽、親切'},
+      crystals:['橙瑪瑙','橙石榴','橙碧璽','橙月光','橙拓帕'],
+      crystalUse:'增加好人緣，並懂得如何去協調人、事、物',
+      positive:'溝通能力優秀，耐心貼心，適合團隊合作',
+      negative:'敏感多思，非常在意他人言語，容易猶豫不決',
+    },
+    3: {
+      name:'創意數・表達數', type:'遠見型', wuxing:'火',
+      keywords:['行動','熱情','情緒'],
+      color:{name:'黃色', hex:'#D4AC0D', energy:'希望、樂觀、動力'},
+      crystals:['黃水晶','黃貓眼','黃琉璃','黃琥珀','黃虎眼'],
+      crystalUse:'增加行動力、並激發靈感呈現創意',
+      positive:'行動力強，懂得銷售自己，樂觀不怕被拒絕',
+      negative:'衝動，容易發脾氣，急躁任性',
+    },
+    4: {
+      name:'務實數・穩固數', type:'務實型', wuxing:'木',
+      keywords:['計畫','規劃','悲觀'],
+      color:{name:'綠色', hex:'#1E8449', energy:'健康、成長、沉穩'},
+      crystals:['綠摩根','綠幽靈','綠松石','綠貓眼','綠髮晶'],
+      crystalUse:'安撫情緒，並增加內在的安全感',
+      positive:'踏實穩重，按部就班，說出口的事一定做到',
+      negative:'過於保守，不喜歡變化，思慮過多',
+    },
+    5: {
+      name:'自由數・冒險數', type:'感覺型', wuxing:'土',
+      keywords:['目標','方向','固執'],
+      color:{name:'藍色', hex:'#1A5276', energy:'開朗、自由、平靜'},
+      crystals:['藍寶石','藍玉髓','藍松石','藍晶石','藍珊瑚'],
+      crystalUse:'挑戰新目標，並跳脫舒適圈',
+      positive:'崇尚自由，率性重視感覺，目標設定後全力以赴',
+      negative:'固執，強烈自我意識，無法委屈自己',
+    },
+    6: {
+      name:'關懷數・奉獻數', type:'遠見型', wuxing:'金',
+      keywords:['智慧','財富','挑剔'],
+      color:{name:'靛色', hex:'#1F3A93', energy:'信賴、智慧、高貴'},
+      crystals:['青金石','坦桑石','丹泉石','董青石','天青石'],
+      crystalUse:'解決問題，並讓別人記住你的好',
+      positive:'自律性高，謹慎完美，擅長規劃執行',
+      negative:'過於吹毛求疵，困在細節裡',
+    },
+    7: {
+      name:'探究數・幸運數', type:'務實型', wuxing:'水',
+      keywords:['專業','人脈','質疑'],
+      color:{name:'紫色', hex:'#6C3483', energy:'高貴、好運、優雅'},
+      crystals:['紫水晶','紫羅蘭','紫碧璽','紫瑪瑙','紫龍晶'],
+      crystalUse:'引起注意，並帶來好運氣',
+      positive:'專業型人格，深入研究，人緣好，貴人多',
+      negative:'容易鑽牛角尖，行動慢半拍，易被人利用',
+    },
+    8: {
+      name:'權威數・使命數', type:'感覺型', wuxing:'火',
+      keywords:['責任','使命','糾結'],
+      color:{name:'金色', hex:'#9A7D0A', energy:'成功、金錢、權力'},
+      crystals:['金髮晶','金鈦金','金草莓','金水晶','金珊瑚'],
+      crystalUse:'處理重大事情，並想幫助他人發揮潛能',
+      positive:'責任感與使命感強，凡事認真負責，天生管理者',
+      negative:'壓力大，不懂放手，事事攬上身',
+    },
+    9: {
+      name:'智慧數・大愛數', type:'遠見型', wuxing:'木',
+      keywords:['機會','成功','貪心'],
+      color:{name:'白色', hex:'#AAA090', energy:'純潔、神聖、包容'},
+      crystals:['白珍珠','白硨磲','白水晶','白月光','白蛋白'],
+      crystalUse:'創造夢想，並加以實現',
+      positive:'超強包容力，積極樂觀，人緣好，機會多',
+      negative:'貪心，這山看那山高，容易三分鐘熱度',
+    },
+  },
+  wuxingLabel:{ 金:'⚖ 金', 水:'💧 水', 木:'🌿 木', 火:'🔥 火', 土:'🏔 土' },
+  typeDesc:{
+    '務實型':'穩紮穩打，重視計畫與執行',
+    '感覺型':'重視感受，直覺敏銳，情感豐富',
+    '遠見型':'眼光長遠，思維宏觀，充滿可能',
+  },
+  groups:[
+    {code:'IJM', area:'最根本密碼', desc:'起心動念、動機根源'},
+    {code:'KLN', area:'最根本密碼', desc:'能量基礎、先天資質'},
+    {code:'MNO', area:'核心性格',   desc:'最深沈的自我'},
+    {code:'JMW', area:'工作人際',   desc:'延伸工作人際情形'},
+    {code:'IMX', area:'工作人際',   desc:'延伸工作人際情形'},
+    {code:'XWS', area:'工作人際',   desc:'21-40歲工作與人際'},
+    {code:'NOQ', area:'性格外顯',   desc:'對內性格密碼'},
+    {code:'MOP', area:'性格外顯',   desc:'對外性格密碼'},
+    {code:'QPR', area:'事業發展',   desc:'41-60歲事業與發展'},
+    {code:'KNV', area:'家庭財富',   desc:'延伸家庭財富情形'},
+    {code:'LNU', area:'家庭財富',   desc:'延伸家庭財富情形'},
+    {code:'VUT', area:'家庭財富',   desc:'60歲後家庭與財富'},
+  ],
+};
+
+// ============================================================
+// 計算引擎
+// ============================================================
+function lcReduce(n) {
+  while (n > 9) {
+    n = String(n).split('').reduce((s, d) => s + parseInt(d, 10), 0);
+  }
+  return n;
+}
+
+function lcCompute(dateStr) {
+  const [y, m, d] = dateStr.split('-');
+  const dd = d.padStart(2, '0');
+  const mm = m.padStart(2, '0');
+  const yy = y.padStart(4, '0');
+  const raw = (dd + mm + yy).split('').map(Number);
+
+  const A=raw[0], B=raw[1], C=raw[2], D=raw[3];
+  const E=raw[4], F=raw[5], G=raw[6], H=raw[7];
+
+  const I=lcReduce(A+B), J=lcReduce(C+D);
+  const K=lcReduce(E+F), L=lcReduce(G+H);
+  const M=lcReduce(I+J), N=lcReduce(K+L);
+  const O=lcReduce(M+N);
+  const P=lcReduce(M+O), Q=lcReduce(N+O), R=lcReduce(P+Q);
+  const X=lcReduce(I+M), W=lcReduce(J+M), S=lcReduce(X+W);
+  const V=lcReduce(K+N), U=lcReduce(L+N), T=lcReduce(V+U);
+
+  return {
+    A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,
+    subconscious: lcReduce(O+I+L),
+    inner:        lcReduce(O+M+N),
+    outer:        lcReduce(S+R+T),
+  };
+}
+
+// ============================================================
+// 主流程
+// ============================================================
+function lcCalculate() {
+  const input = document.getElementById('lc-birthdate');
+  if (!input.value) { alert('請先選擇出生日期'); return; }
+  const vals = lcCompute(input.value);
+  lcRenderHologram(vals);
+  lcRenderOCard(vals.O, vals);
+  lcRenderCrystals(vals.O, vals.subconscious);
+  lcRenderPaidPreview(vals);
+  const result = document.getElementById('lc-result');
+  result.style.display = 'block';
+  result.scrollIntoView({behavior:'smooth'});
+}
+
+// ============================================================
+// 全息圖 SVG
+// ============================================================
+function lcRenderHologram(vals) {
+  const svg = document.getElementById('lc-svg');
+  svg.innerHTML = '';
+  const ns = 'http://www.w3.org/2000/svg';
+
+  const pos = {
+    A:{x:90,  y:470}, B:{x:155, y:470},
+    C:{x:220, y:470}, D:{x:285, y:470},
+    E:{x:415, y:470}, F:{x:480, y:470},
+    G:{x:545, y:470}, H:{x:610, y:470},
+    I:{x:122, y:390}, J:{x:253, y:390},
+    K:{x:447, y:390}, L:{x:578, y:390},
+    M:{x:188, y:310}, N:{x:512, y:310},
+    O:{x:350, y:230},
+    P:{x:265, y:148}, Q:{x:435, y:148},
+    R:{x:350, y:66},
+    X:{x:95,  y:310}, W:{x:95,  y:230}, S:{x:30,  y:148},
+    V:{x:605, y:310}, U:{x:605, y:230}, T:{x:670, y:148},
+  };
+
+  const edgeGroups = [
+    {edges:[['A','I'],['B','I'],['C','J'],['D','J'],['E','K'],['F','K'],['G','L'],['H','L']], color:'#D4C4A0', width:1.5, dash:'4,3'},
+    {edges:[['I','M'],['J','M'],['K','N'],['L','N'],['M','O'],['N','O']], color:'#C9A86A', width:2},
+    {edges:[['M','P'],['O','P'],['N','Q'],['O','Q'],['P','R'],['Q','R']], color:'#9B7DCA', width:2},
+    {edges:[['I','X'],['M','X'],['J','W'],['M','W'],['X','S'],['W','S']], color:'#7BAFD4', width:2},
+    {edges:[['K','V'],['N','V'],['L','U'],['N','U'],['V','T'],['U','T']], color:'#6DB38A', width:2},
+  ];
+
+  edgeGroups.forEach(g => {
+    g.edges.forEach(([a,b]) => {
+      const line = document.createElementNS(ns, 'line');
+      line.setAttribute('x1', pos[a].x); line.setAttribute('y1', pos[a].y);
+      line.setAttribute('x2', pos[b].x); line.setAttribute('y2', pos[b].y);
+      line.setAttribute('stroke', g.color);
+      line.setAttribute('stroke-width', g.width);
+      if (g.dash) line.setAttribute('stroke-dasharray', g.dash);
+      svg.appendChild(line);
+    });
+  });
+
+  const styles = {
+    A:{r:16,fill:'#EDE0C0',stroke:'#C4B080',ts:9, vs:11},
+    B:{r:16,fill:'#EDE0C0',stroke:'#C4B080',ts:9, vs:11},
+    C:{r:16,fill:'#EDE0C0',stroke:'#C4B080',ts:9, vs:11},
+    D:{r:16,fill:'#EDE0C0',stroke:'#C4B080',ts:9, vs:11},
+    E:{r:16,fill:'#EDE0C0',stroke:'#C4B080',ts:9, vs:11},
+    F:{r:16,fill:'#EDE0C0',stroke:'#C4B080',ts:9, vs:11},
+    G:{r:16,fill:'#EDE0C0',stroke:'#C4B080',ts:9, vs:11},
+    H:{r:16,fill:'#EDE0C0',stroke:'#C4B080',ts:9, vs:11},
+    I:{r:20,fill:'#FFF6E0',stroke:'#C9A86A',ts:10,vs:12},
+    J:{r:20,fill:'#FFF6E0',stroke:'#C9A86A',ts:10,vs:12},
+    K:{r:20,fill:'#FFF6E0',stroke:'#C9A86A',ts:10,vs:12},
+    L:{r:20,fill:'#FFF6E0',stroke:'#C9A86A',ts:10,vs:12},
+    M:{r:22,fill:'#FFF0CC',stroke:'#C9A86A',ts:11,vs:13},
+    N:{r:22,fill:'#FFF0CC',stroke:'#C9A86A',ts:11,vs:13},
+    O:{r:32,fill:'#C9A86A',stroke:'#A07840',ts:14,vs:18,glow:true},
+    P:{r:18,fill:'#EEE8FA',stroke:'#9B7DCA',ts:10,vs:12},
+    Q:{r:18,fill:'#EEE8FA',stroke:'#9B7DCA',ts:10,vs:12},
+    R:{r:20,fill:'#E8DEFA',stroke:'#9B7DCA',ts:10,vs:13},
+    X:{r:18,fill:'#DFF0FA',stroke:'#7BAFD4',ts:10,vs:12},
+    W:{r:18,fill:'#DFF0FA',stroke:'#7BAFD4',ts:10,vs:12},
+    S:{r:20,fill:'#D0E8F8',stroke:'#7BAFD4',ts:10,vs:13},
+    V:{r:18,fill:'#DFF8EA',stroke:'#6DB38A',ts:10,vs:12},
+    U:{r:18,fill:'#DFF8EA',stroke:'#6DB38A',ts:10,vs:12},
+    T:{r:20,fill:'#D0F0E0',stroke:'#6DB38A',ts:10,vs:13},
+  };
+
+  Object.keys(pos).forEach(k => {
+    const {x,y} = pos[k];
+    const st = styles[k];
+
+    if (st.glow) {
+      const g = document.createElementNS(ns, 'circle');
+      g.setAttribute('cx',x); g.setAttribute('cy',y);
+      g.setAttribute('r', st.r+9);
+      g.setAttribute('fill','#C9A86A'); g.setAttribute('fill-opacity','0.18');
+      svg.appendChild(g);
+    }
+
+    const c = document.createElementNS(ns,'circle');
+    c.setAttribute('cx',x); c.setAttribute('cy',y); c.setAttribute('r',st.r);
+    c.setAttribute('fill',st.fill); c.setAttribute('stroke',st.stroke);
+    c.setAttribute('stroke-width', k==='O' ? 3 : 1.5);
+    svg.appendChild(c);
+
+    const lt = document.createElementNS(ns,'text');
+    lt.setAttribute('x',x); lt.setAttribute('y', y - st.r*0.3);
+    lt.setAttribute('text-anchor','middle'); lt.setAttribute('font-size',st.ts);
+    lt.setAttribute('fill', k==='O' ? 'rgba(255,255,255,0.75)' : '#8B7355');
+    lt.setAttribute('font-family','Arial,sans-serif');
+    lt.textContent = k;
+    svg.appendChild(lt);
+
+    const vt = document.createElementNS(ns,'text');
+    vt.setAttribute('x',x); vt.setAttribute('y', y + st.r*0.55);
+    vt.setAttribute('text-anchor','middle'); vt.setAttribute('font-size',st.vs);
+    vt.setAttribute('font-weight','bold'); vt.setAttribute('font-family','Arial,sans-serif');
+    vt.setAttribute('fill', k==='O' ? '#fff' : '#3D2B1F');
+    vt.textContent = vals[k];
+    svg.appendChild(vt);
+  });
+}
+
+// ============================================================
+// O 號卡片
+// ============================================================
+function lcRenderOCard(O, vals) {
+  const p = LIFE_CODE_CONFIG.personalities[O];
+  const typeDesc = LIFE_CODE_CONFIG.typeDesc[p.type];
+  const wuxingLabel = LIFE_CODE_CONFIG.wuxingLabel[p.wuxing];
+  document.getElementById('lc-o-card').innerHTML = `
+    <div class="lc-o-header">
+      <div class="lc-o-circle">${O}</div>
+      <div class="lc-o-meta">
+        <h2>${O} 號・${p.name}</h2>
+        <div class="lc-tags">
+          <span class="lc-tag wuxing">${wuxingLabel}</span>
+          <span class="lc-tag type">${p.type}</span>
+          ${p.keywords.map(kw=>`<span class="lc-tag">${kw}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+    <p class="lc-o-desc">
+      <strong style="color:var(--gold-dark)">${p.type}</strong>・${typeDesc}<br>
+      你的主性格數字是 <strong>${O}</strong>，主宰你近 60% 的思想行為模式。
+    </p>
+    <div class="lc-o-energy">
+      <div><strong>✦ 正能量</strong>${p.positive}</div>
+      <div><strong>⚡ 低能量</strong>${p.negative}</div>
+    </div>
+    <p class="lc-sub-info">潛意識密碼：${vals.subconscious} 號</p>
+  `;
+}
+
+// ============================================================
+// 水晶推薦
+// ============================================================
+function lcRenderCrystals(O, sub) {
+  const pO  = LIFE_CODE_CONFIG.personalities[O];
+  const pSub = LIFE_CODE_CONFIG.personalities[sub];
+  document.getElementById('lc-crystal-section').innerHTML = `
+    <h3>✦ 水晶能量推薦</h3>
+    <div class="lc-crystal-grid">
+      <div class="lc-crystal-card">
+        <h4>主性格水晶（O = ${O} 號）</h4>
+        <span class="lc-color-badge" style="background:${pO.color.hex};color:#fff">
+          ${pO.color.name}・${pO.color.energy}
+        </span>
+        <div class="lc-crystal-list">${pO.crystals.slice(0,3).join('・')}</div>
+        <div class="lc-crystal-desc">${pO.crystalUse}</div>
+      </div>
+      <div class="lc-crystal-card">
+        <h4>潛意識水晶（密碼 = ${sub} 號）</h4>
+        <span class="lc-color-badge" style="background:${pSub.color.hex};color:#fff">
+          ${pSub.color.name}・${pSub.color.energy}
+        </span>
+        <div class="lc-crystal-list">${pSub.crystals.slice(0,2).join('・')}</div>
+        <div class="lc-crystal-desc">${pSub.crystalUse}</div>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// 付費深度解析預覽
+// ============================================================
+function lcRenderPaidPreview(vals) {
+  const chips = LIFE_CODE_CONFIG.groups.map(g => {
+    const nums = g.code.split('').map(c => vals[c] !== undefined ? vals[c] : '?').join('-');
+    return `<span class="lc-paid-chip">${g.code} ${nums}・${g.desc}</span>`;
+  }).join('');
+  document.getElementById('lc-paid-section').innerHTML = `
+    <div class="lc-paid-blur">
+      <h3 style="text-align:center;color:var(--gold-dark);margin-bottom:14px">深度解析・12 組聯合密碼</h3>
+      <div class="lc-paid-row">${chips}</div>
+      <div style="margin-top:14px;padding:12px;background:#fff;border-radius:8px">
+        <strong>三大特殊密碼</strong><br>
+        潛意識密碼 ${vals.subconscious}・內心密碼 ${vals.inner}・外心密碼 ${vals.outer}
+      </div>
+    </div>
+    <div class="lc-paid-overlay">
+      <h3>解鎖你的完整生命密碼</h3>
+      <p>12 組聯合密碼・三大特殊密碼・水晶個人化建議</p>
+      <a class="lc-cta-btn" href="/contact">預約深度解析 →</a>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
