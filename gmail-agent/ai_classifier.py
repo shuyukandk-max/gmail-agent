@@ -5,6 +5,13 @@ from openai import OpenAI
 # 各帳號的重要郵件定義
 ACCOUNT_RULES = {
     "admin@lumiora.studio": (
+        "【寄件人指定分類，優先於以下其他規則與通用規則】\n"
+        "- 重要：Squarespace Ireland Limited 帳單通知（b2ceci@ecimail1.tradevan.com.tw）、"
+        "Google Payments（payments-noreply@google.com）\n"
+        "- 待處理：PayPal（service@intl.paypal.com）、Squarespace 通知（no-reply@squarespace.com）\n"
+        "- 一般：Squarespace 電子報/行銷（noreply@mail.squarespace.com）、"
+        "Instagram（no-reply@mail.instagram.com）、ORCID（DoNotReply@verify.orcid.org）\n"
+        "【其他規則】\n"
         "Google Workspace 相關通知（日曆邀請、Drive 分享、Google 帳號安全通知、Workspace 管理員通知）"
     ),
     "shuyukan.dk@gmail.com": (
