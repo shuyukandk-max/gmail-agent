@@ -27,7 +27,11 @@ ACCOUNT_RULES = {
         "課程或學習平台通知（Teachable、Notion、線上課程等）"
     ),
     "60722105@gm.chihlee.edu.tw": (
-        "Notion 相關通知；學校重要通知"
+        "【寄件人指定分類，優先於以下其他規則與通用規則】\n"
+        "- 待處理：Make（info@make.com）\n"
+        "- 一般：Notion Team（notify@updates.notion.so）、Figma（no-reply@email.figma.com）\n"
+        "【其他規則】\n"
+        "學校重要通知"
     ),
     "shuyu0908178239@gmail.com": (
         "個人重要事務（保險繳費、保單通知、理賠；政府機關；醫療）；"
