@@ -35,6 +35,19 @@ ACCOUNT_RULES = {
         "社群訂閱服務通知（Instagram、重要訂閱服務等）"
     ),
     "blighteye.demi@gmail.com": (
+        "【寄件人指定分類，優先於以下其他規則與通用規則】\n"
+        "- 重要：電子發票通知（einvoice@einvoice.nat.gov.tw）\n"
+        "- 待處理：星展銀行 DBS Bank（eservicetw@dbs.com）、"
+        "國泰世華銀行（service@pxbillrc01.cathaybk.com.tw）、"
+        "龍巖客戶專區（customer@lyls.com.tw）、"
+        "凱基銀行（service@kgibank.com）\n"
+        "- 一般：星禮程服務系統（service@myotgcard.starbucks.com.tw）、"
+        "星禮程（member@e.starbucks.com.tw）、"
+        "ShopBack（hello@info.shopback.com.tw）、"
+        "樂天國際商業銀行（Service@mhu.rakuten-bank.com.tw）、"
+        "凱基銀行（card888@kgibank.com）、"
+        "台北富邦銀行（service@bhu.taipeifubon.com.tw）\n"
+        "【其他規則】\n"
         "所有信用卡刷卡通知、銀行帳戶通知、帳單、繳費通知（不論寄件人）"
     ),
 }
