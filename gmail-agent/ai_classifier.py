@@ -8,6 +8,13 @@ ACCOUNT_RULES = {
         "Google Workspace 相關通知（日曆邀請、Drive 分享、Google 帳號安全通知、Workspace 管理員通知）"
     ),
     "shuyukan.dk@gmail.com": (
+        "【寄件人指定分類，優先於以下其他規則與通用規則】\n"
+        "- 重要：AeonProgress LLC 發票通知（invoice+statements+acct_1QSYRA2NCfBsi89q@stripe.com）、"
+        "財政部稅務入口網（webmail@etax.nat.gov.tw）、"
+        "Anthropic, PBC 發票通知（invoice+statements@mail.anthropic.com）\n"
+        "- 待處理：GitHub 通知（notifications@github.com）、OpenAI（noreply@tm.openai.com）\n"
+        "- 一般：ReadKidz（help@readkidz.com）、Claude Team（no-reply@email.claude.com）、Notion 訊息通知\n"
+        "【其他規則】\n"
         "信用卡或銀行的刷卡通知、帳單、繳費通知；"
         "客戶或工作往來的信件（需要回覆或處理的）；"
         "課程或學習平台通知（Teachable、Notion、線上課程等）"
