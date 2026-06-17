@@ -31,6 +31,7 @@ def main():
         result = classify_email(email, model=model)
         enriched = {**email, **result}
         classified.append(enriched)
+        print(f"   [{email.get('account')}] {email.get('subject','?')} → {result.get('category','?')}")
 
         rule = should_reply(email, rules)
         if rule and rule.get("action") == "reply":

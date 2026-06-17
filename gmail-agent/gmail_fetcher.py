@@ -48,8 +48,10 @@ def fetch_yesterday_emails(service, account_email: str) -> list:
     today = datetime.now().strftime("%Y/%m/%d")
     query = f"after:{after} before:{today}"
 
+    print(f"   [{account_email}] 查詢：{query}")
     result = service.users().messages().list(userId="me", q=query).execute()
     messages = result.get("messages", [])
+    print(f"   [{account_email}] 找到 {len(messages)} 封")
 
     emails = []
     for msg_ref in messages:
