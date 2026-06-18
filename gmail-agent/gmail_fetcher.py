@@ -46,8 +46,8 @@ def fetch_yesterday_emails(service, account_email: str) -> list:
     taiwan = timezone(timedelta(hours=8))
     now_tw = datetime.now(taiwan)
     today_str = now_tw.strftime("%Y/%m/%d")
-    yesterday_str = (now_tw - timedelta(days=1)).strftime("%Y/%m/%d")
-    query = f"after:{yesterday_str} before:{today_str}"
+    two_days_ago_str = (now_tw - timedelta(days=2)).strftime("%Y/%m/%d")
+    query = f"after:{two_days_ago_str} before:{today_str}"
 
     print(f"   [{account_email}] 查詢：{query}")
     result = service.users().messages().list(userId="me", q=query).execute()
