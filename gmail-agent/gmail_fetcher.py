@@ -43,12 +43,8 @@ def get_gmail_service(token_file: str, credentials_file: str = "credentials.json
 
 
 def fetch_yesterday_emails(service, account_email: str) -> list:
-    taiwan = timezone(timedelta(hours=8))
-    now_tw = datetime.now(taiwan)
-    # after: is exclusive in Gmail, so use 2 days ago to capture yesterday
-    today_str = now_tw.strftime("%Y/%m/%d")
-    two_days_ago_str = (now_tw - timedelta(days=2)).strftime("%Y/%m/%d")
-    query = f"after:{two_days_ago_str} before:{today_str}"
+    # newer_than:2d = last 48 hours; filter by internalDate in Python
+    query = "newer_than:2d"
 
     print(f"   [{account_email}] 查詢：{query}")
     result = service.users().messages().list(userId="me", q=query).execute()
