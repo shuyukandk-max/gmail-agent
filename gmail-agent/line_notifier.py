@@ -2,7 +2,7 @@ import requests
 from datetime import date as date_type
 
 
-def format_summary(emails: list, date: str = None) -> str:
+def format_summary(emails: list, date: str = None, fetched: int = None) -> str:
     if date is None:
         date = str(date_type.today())
 
@@ -10,7 +10,8 @@ def format_summary(emails: list, date: str = None) -> str:
     pending = [e for e in emails if e.get("category") == "待處理"]
     general = [e for e in emails if e.get("category") == "一般"]
 
-    lines = [f"📬 每日郵件摘要 {date}", ""]
+    fetch_info = f"（共讀取 {fetched} 封）" if fetched is not None else ""
+    lines = [f"📬 {date} 郵件摘要 {fetch_info}", ""]
 
     lines.append(f"🔴 重要（{len(important)} 封）")
     if important:

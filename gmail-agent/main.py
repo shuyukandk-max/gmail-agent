@@ -1,6 +1,6 @@
 import yaml
 import os
-from datetime import date
+from datetime import date, timedelta
 from gmail_fetcher import fetch_all_accounts
 from ai_classifier import classify_email
 from auto_reply import load_rules, should_reply, send_reply
@@ -41,8 +41,8 @@ def main():
                 print(f"   ✉️  已自動回覆：{email['subject']}")
 
     print("📲 正在發送 LINE 通知...")
-    today = str(date.today())
-    message = format_summary(classified, date=today)
+    yesterday = str(date.today() - timedelta(days=1))
+    message = format_summary(classified, date=yesterday, fetched=len(all_emails))
 
     line_cfg = config["line"]
     line_token = os.environ.get("LINE_CHANNEL_ACCESS_TOKEN", line_cfg["channel_access_token"])

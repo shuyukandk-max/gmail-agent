@@ -93,7 +93,10 @@ def fetch_yesterday_emails(service, account_email: str) -> list:
 def fetch_all_accounts(accounts: list, credentials_file: str = "credentials.json") -> list:
     all_emails = []
     for account in accounts:
-        service = get_gmail_service(account["token_file"], credentials_file)
-        emails = fetch_yesterday_emails(service, account["email"])
-        all_emails.extend(emails)
+        try:
+            service = get_gmail_service(account["token_file"], credentials_file)
+            emails = fetch_yesterday_emails(service, account["email"])
+            all_emails.extend(emails)
+        except Exception as e:
+            print(f"   ⚠️  [{account['email']}] 讀取失敗：{e}")
     return all_emails
