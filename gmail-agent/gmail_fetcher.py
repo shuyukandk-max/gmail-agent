@@ -1,7 +1,7 @@
 import os
 import base64
 import socket
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -43,10 +43,13 @@ def get_gmail_service(token_file: str, credentials_file: str = "credentials.json
 
 
 def fetch_yesterday_emails(service, account_email: str) -> list:
-    yesterday = datetime.now() - timedelta(days=1)
-    after = yesterday.strftime("%Y/%m/%d")
-    today = datetime.now().strftime("%Y/%m/%d")
-    query = f"after:{after} before:{today}"
+    taiwan = timezone(timedelta(hours=8))
+    now_tw = datetime.now(taiwan)
+    today_midnight = now_tw.replace(hour=0, minute=0, second=0, microsecond=0)
+    yesterday_midnight = today_midnight - timedelta(days=1)
+    after_ts = int(yesterday_midnight.timestamp())
+    before_ts = int(today_midnight.timestamp())
+    query = f"after:{after_ts} before:{before_ts}"
 
     print(f"   [{account_email}] 查詢：{query}")
     result = service.users().messages().list(userId="me", q=query).execute()
