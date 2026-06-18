@@ -43,11 +43,13 @@ def get_gmail_service(token_file: str, credentials_file: str = "credentials.json
 
 
 def fetch_yesterday_emails(service, account_email: str) -> list:
-    # newer_than:2d = last 48 hours; filter by internalDate in Python
     query = "newer_than:2d"
-
     print(f"   [{account_email}] 查詢：{query}")
-    result = service.users().messages().list(userId="me", q=query).execute()
+    result = service.users().messages().list(userId="me", q=query, maxResults=5).execute()
+    print(f"   [{account_email}] raw result keys: {list(result.keys())}")
+    # Also test no-filter to check auth
+    result_all = service.users().messages().list(userId="me", maxResults=5).execute()
+    print(f"   [{account_email}] no-filter count: {result_all.get('resultSizeEstimate', 'N/A')}")
     messages = result.get("messages", [])
     print(f"   [{account_email}] 找到 {len(messages)} 封")
 
