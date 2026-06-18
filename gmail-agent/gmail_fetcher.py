@@ -43,10 +43,14 @@ def get_gmail_service(token_file: str, credentials_file: str = "credentials.json
 
 
 def fetch_yesterday_emails(service, account_email: str) -> list:
-    profile = service.users().getProfile(userId="me").execute()
-    print(f"   [{account_email}] 實際認證帳號：{profile.get('emailAddress')}")
-    query = "newer_than:2d"
+    taiwan = timezone(timedelta(hours=8))
+    now_tw = datetime.now(taiwan)
+    today_str = now_tw.strftime("%Y/%m/%d")
+    yesterday_str = (now_tw - timedelta(days=1)).strftime("%Y/%m/%d")
+    query = f"after:{yesterday_str} before:{today_str}"
+
     print(f"   [{account_email}] 查詢：{query}")
+    result = service.users().messages().list(userId="me", q=query).execute()
     messages = result.get("messages", [])
     print(f"   [{account_email}] 找到 {len(messages)} 封")
 
